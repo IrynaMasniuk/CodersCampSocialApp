@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const logger = require('./middleware/logger');
 const users = require('./routes/users');
 const express = require('express');
+// const express = require('./database');
 const app = express();
 const events = require('./routes/events')
 
