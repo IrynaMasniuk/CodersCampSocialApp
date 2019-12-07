@@ -21,4 +21,4 @@ class FriendManager {
 }
 }
 
-module.exports = friendsDes;
+module.exports = FriendManager;

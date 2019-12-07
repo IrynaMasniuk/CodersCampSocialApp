@@ -1,7 +1,7 @@
 const Joi = require('joi');
+const FriendsModule = require('../friendsmanager');
 const app = require('express');
 const router = app.Router();
-const FriendsModule = require('../friendsmanager');
 const friendManager = new FriendsModule();
 
 
