@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/application')
-    .then (() => console.log('Connected to MonoDB...'))                 //Change
+    .then (() => console.log('Connected to MongoDB...'))                 //Change
     .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
 
     const userSchema = new mongoose.Schema({
@@ -31,7 +31,9 @@ mongoose.connect('mongodb://localhost/application')
         },
         email: { 
             type: String,
-            required: true 
+            required: true,
+            minlength: 5,
+            maxlength: 255,
             },
         hobbies: {
             type: String,
@@ -47,25 +49,29 @@ mongoose.connect('mongodb://localhost/application')
 
     const User = mongoose.model('User', userSchema);   
 
-    async function createCourse() {
+    async function createUser(userData) {
         let user = new User({
-            username: 'Ann Shirley',           
-            dateOfBirth: '01.01.2001',
-            phoneNumber: +48123456789,
-            work: 'Wroclaw City Council',
-            education: 'Quebec Technical University',
-            cityOfLiving: 'Wroclaw',
-            cityOfOrigin: 'Quebec',
-            relationStatus: 'complicated',
-            email: 'd3734249@urhen.com',
-            hobbies: 'reading'
+            username: userData.username,           
+            dateOfBirth: userData.dateOfBirth,
+            phoneNumber: userData.phoneNumber,
+            work: userData.work,
+            education: userData.education,
+            cityOfLiving: userData.cityOfLiving,
+            cityOfOrigin: userData.cityOfOrigin,
+            relationStatus: userData.relationStatus,
+            email: userData.email,
+            hobbies: userData.hobbies
         });
    
         try {
             const result = await user.save();
             console.log(result);
+            return result;
         }
         catch (ex) {
             console.log(ex.message);
+            return undefined;
         }
     }     
+
+    exports.createUser = createUser;
