@@ -5,9 +5,9 @@ const router = express.Router();
 const userManager = new UserManagerModule();
 
 
-router.get('/', (req, res) => {
-    res.send(users);
-});
+// router.get('/', (req, res) => {
+//     res.send(users);
+// });
 
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);

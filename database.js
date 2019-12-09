@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/codersCampSocialApp')
+mongoose.connect('mongodb://localhost/application')
     .then (() => console.log('Connected to MongoDB...'))                 //Change
     .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
 
