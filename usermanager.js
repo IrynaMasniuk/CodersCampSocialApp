@@ -30,6 +30,11 @@ class UserManager {
             // })
         }
     }
+        async authenticate(userData){
+       await userDbUtils.authenticate(userData);
+        }
+
+
 }
 
 module.exports = UserManager;

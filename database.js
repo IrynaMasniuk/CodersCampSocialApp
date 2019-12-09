@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var session = require('express-session');
 
 mongoose.connect('mongodb://localhost/application')
     .then (() => console.log('Connected to MongoDB...'))                 //Change
@@ -11,7 +12,13 @@ mongoose.connect('mongodb://localhost/application')
             minlength: 3,
             maxlength: 50,
             // match: //pattern
-            },             
+            },
+        password : {
+            type: String,
+            required: true,
+            minlength: 6,
+            maxlength: 16,
+        },
         dateOfBirth: { 
             type: String,              // change to Date
             required: true 
@@ -51,7 +58,8 @@ mongoose.connect('mongodb://localhost/application')
 
     async function createUser(userData) {
         let user = new User({
-            username: userData.username,           
+            username: userData.username,
+            password: userData.password,
             dateOfBirth: userData.dateOfBirth,
             phoneNumber: userData.phoneNumber,
             work: userData.work,
@@ -72,6 +80,15 @@ mongoose.connect('mongodb://localhost/application')
             console.log(ex.message);
             return undefined;
         }
-    }     
-
+    }
+    async function authenticate({username, password}){
+        const user = await User.findOne({username});
+        if(user && password == user.password){
+            console.log("Loggedin");
+        }else{
+            return "password doesn't match";
+        }
+        return undefined;
+    }
+    exports.authenticate = authenticate;
     exports.createUser = createUser;
