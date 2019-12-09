@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/application')
+mongoose.connect('mongodb://localhost/codersCampSocialApp')
     .then (() => console.log('Connected to MongoDB...'))                 //Change
     .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
 
@@ -74,4 +74,12 @@ mongoose.connect('mongodb://localhost/application')
         }
     }     
 
+    async function searchUser(email) {
+        const temp = await User.findOne({"email": email});
+        console.log('foundUser:' + JSON.stringify(temp));
+        return temp;
+    }
+
     exports.createUser = createUser;
+    exports.searchUser = searchUser;
+    
