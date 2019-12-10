@@ -1,4 +1,4 @@
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/application')
     .then (() => console.log('Connected to MongoDB...'))                 //Change
@@ -47,7 +47,7 @@ mongoose.connect('mongodb://localhost/application')
         //isOnline: Boolean,
     });
 
-//     const User = mongoose.model('User', userSchema);   
+    const User = mongoose.model('User', userSchema);   
 
     async function createUser(userData) {
         let user = new User({
