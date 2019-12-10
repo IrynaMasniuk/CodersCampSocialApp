@@ -1,8 +1,8 @@
-const userDbUtils = require('./database');
+const userDbUtils = require('../database');
 
 class UserManager {
     async createUser(userData) {
-        const existingUser = undefined;// search(userdata);
+        const existingUser = await userDbUtils.searchUser(userData.email);// search(userdata);
         if (existingUser) {
             return {
                 message: 'User with such e-mail is already registered',
