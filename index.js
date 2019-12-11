@@ -4,7 +4,6 @@ const users = require('./routes/users');
 const friends = require('./routes/friends');
 const events = require('./routes/events')
 const express = require('express');
-// const express = require('./database');
 const app = express();
 
 
