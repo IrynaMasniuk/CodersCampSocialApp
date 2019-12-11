@@ -74,4 +74,12 @@ mongoose.connect('mongodb://localhost/application')
         }
     }     
 
+    async function searchUser(email) {
+        const temp = await User.findOne({"email": email});
+        console.log('foundUser:' + JSON.stringify(temp));
+        return temp;
+    }
+
     exports.createUser = createUser;
+    exports.searchUser = searchUser;
+    
