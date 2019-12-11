@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const Joi = require('joi');
+
 
 mongoose.connect('mongodb://localhost/application')
 .then(()=> console.log('Connected to MongoDB...'))
 .catch(err => console.error('Could not connected to MongoDB...'))
 
-const Friend = new mongoose.model('Friend', new mongoose.Schema({
+const friendSchema = new mongoose.Schema({
     username: { 
         type: String, 
         required: true,
@@ -31,7 +31,9 @@ const Friend = new mongoose.model('Friend', new mongoose.Schema({
         type: Boolean,
         required: true
     }
-}));
+});
+
+const Friend = mongoose.model('Friend', friendSchema);
 
 async function createFriend(user){
     const friend = new Friend({
@@ -51,23 +53,6 @@ catch (ex) {
     console.log(ex.message);
     return undefined;
 }
-
 }
 
-function validateFriend(friend){
-    console.log(JSON.stringify(friend));
-const schema = {
-    username: Joi.string().min(2).max(50).required(),
-    dateOfBirth: Joi.string().required(),
-    email: Joi.string().min(5).max(255).required(),
-    typeofFriend: Joi.any().valid('best friend', 'friend', 'familiar', 'colleague', 'relative'),
-    friendshipState: Joi.boolean()
-};
-return Joi.validate(friend, schema);
-};
-
-
-
-exports.Friend = Friend;
-exports.createFriend = createFriend;
-exports.validateFriend = validateFriend;
+module.exports = createFriend;
