@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
     //isOnline: Boolean,
 });
 
-//     const User = mongoose.model('User', userSchema);   
+const User = mongoose.model('User', userSchema);
 
 async function createUser(userData) {
     let user = new User({
