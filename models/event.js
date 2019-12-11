@@ -1,7 +1,11 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-const Event = mongoose.model('Customer', new mongoose.Schema({
+mongoose.connect('mongodb://localhost/social')
+    .then(() => console.log('Connected to MongoDB...'))
+    .catch(err => console.error('Could not connect to MongoDB...'));
+
+const eventSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -22,7 +26,25 @@ const Event = mongoose.model('Customer', new mongoose.Schema({
         type: String
     }
 
-}));
+});
+
+async function createEvent(eventData) {
+    let event = new Event({
+        name: eventData.name,
+        date: eventData.date,
+        place: eventData.place,
+        description: eventData.description
+    });
+    try {
+        const result = await event.save();
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.log(err.message);
+        return undefined;
+    }
+
+}
 
 function validateEvent(event) {
     const schema = {
@@ -35,5 +57,8 @@ function validateEvent(event) {
     return Joi.validate(event, schema);
 }
 
-exports.Event = Event;
+
+
+
 exports.validate = validateEvent;
+exports.create = createEvent;

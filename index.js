@@ -1,11 +1,12 @@
-const mongoose = require('mongoose');
+const Joi = require('joi')
 const logger = require('./middleware/logger');
 const users = require('./routes/users');
 const friends = require('./routes/friends');
+const events = require('./routes/events')
 const express = require('express');
 // const express = require('./database');
 const app = express();
-const events = require('./routes/events')
+
 
 
 app.use(express.json());
