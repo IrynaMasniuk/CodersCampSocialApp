@@ -61,7 +61,7 @@ const schema = {
     dateOfBirth: Joi.string().required(),
     email: Joi.string().min(5).max(255).required(),
     typeofFriend: Joi.any().valid('best friend', 'friend', 'familiar', 'colleague', 'relative'),
-    riendshipState: Joi.boolean()
+    friendshipState: Joi.boolean()
 };
 return Joi.validate(friend, schema);
 };
