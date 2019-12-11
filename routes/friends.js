@@ -44,9 +44,4 @@ router.delete('/:id', async (req,res)=>{
     
     res.send(friend);
 });
-
-
-
-
-
 module.exports = router;
