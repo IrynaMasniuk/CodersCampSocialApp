@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema({
     }
 
 });
-
+const Event = mongoose.model('Event', eventSchema);
 async function createEvent(eventData) {
     let event = new Event({
         name: eventData.name,
