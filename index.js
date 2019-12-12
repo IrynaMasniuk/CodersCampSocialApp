@@ -1,18 +1,18 @@
 const Joi = require('joi');
 const logger = require('./middleware/logger');
-const users = require('./routes/users');
-const friends = require('./routes/friends');
-const express = require('express');
 const comments = require('./routes/comments');
-// const express = require('./database');
+const friends = require('./routes/friends');
+const users = require('./routes/users');
+const express = require('express');
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true})); 
 app.use('/api/users', users);
 app.use('/api/users/:id/friends',friends); 
-app.use('/?', comments);              //Nie wiem gdzie będą komentarze...
+//app.use('/?', comments);              
 
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on port ${port}... `))
