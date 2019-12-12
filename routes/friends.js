@@ -1,4 +1,4 @@
-const {Friend, createFriend, validateFriend} = require('../lodels/friend');
+const {Friend, createFriend, validateFriend} = require('../models/friend');
 const mongoose = require('mongoose');
 const app = require('express');
 const router = app.Router();
