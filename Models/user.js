@@ -11,7 +11,13 @@ mongoose.connect('mongodb://localhost/application')
             minlength: 3,
             maxlength: 50,
             // match: //pattern
-            },             
+            },
+        password:{
+            type: String,
+            required: true,
+            minlength: 5,
+            maxlength:24
+        },
         dateOfBirth: { 
             type: String,              // change to Date
             required: true 
@@ -51,7 +57,8 @@ const User = mongoose.model('User', userSchema);
 
     async function createUser(userData) {
         let user = new User({
-            username: userData.username,           
+            username: userData.username,
+            password: userData.password,
             dateOfBirth: userData.dateOfBirth,
             phoneNumber: userData.phoneNumber,
             work: userData.work,
@@ -82,4 +89,5 @@ const User = mongoose.model('User', userSchema);
 
     exports.createUser = createUser;
     exports.searchUser = searchUser;
+
     

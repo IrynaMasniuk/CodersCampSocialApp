@@ -2,15 +2,20 @@ const Joi = require('joi');
 const logger = require('./middleware/logger');
 const comments = require('./routes/comments');
 const friends = require('./routes/friends');
+const bodyParser = require('body-parser');
 const users = require('./routes/users');
 const express = require('express');
 
+
+
 const app = express();
 
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true})); 
+app.use(express.urlencoded({ extended: true}));
+app.use(bodyParser.json());
 app.use('/api/users', users);
-app.use('/api/users/:id/friends',friends); 
+app.use('/api/users/:id/friends',friends);
 //app.use('/?', comments);              
 
 
