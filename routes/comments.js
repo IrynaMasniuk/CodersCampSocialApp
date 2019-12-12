@@ -1,3 +1,5 @@
+//                          Prawdopodobnie plik do usunięcia... Wszytsko znajdzie się w posts.js
+
 const express = require('express');
 const Joi = require('Joi');
 const commentManager = require('../Models/comment');
@@ -49,9 +51,7 @@ module.exports = router;
 //Funkcja walidująca komentarz
 function validateComment(comment) {
     const schema = {
-      author: Joi.required(),
       content: Joi.required(),
-      posID: Joi.required(),            //ID postu pod którym komentarz się znajduje?
     };
   
     return Joi.validate(comment, schema);

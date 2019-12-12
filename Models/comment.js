@@ -1,31 +1,23 @@
+//                          Prawdopodobnie plik do usunięcia... Wszytsko znajdzie się w post.js
+
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/application')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
-const commentSchema = new mongoose.Schema({                 //Schemat komentarza
-    author: {         //Autor komentarza, potrzebne do edycji
-        type: String, 
-        required: true,
-        },
-    content:{           //Komentarz
+const commentSchema = new mongoose.Schema({
+    content:{
         type: String,
         required: true,
-    },
-    postID:{            //ID postu pod jakim, ten komentarz się znajduje
-       type: String,
-        required: true,
-    },
+    }
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
 
 async function createComment(commentData){
     const comment = new Comment({
-        author: commentData.author,
-        content: commentData.content,
-        postID: commentData.postID,
+        content: commentData.content
     });
 
     try {

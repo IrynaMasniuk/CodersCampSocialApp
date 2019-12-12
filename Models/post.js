@@ -4,35 +4,65 @@ mongoose.connect('mongodb://localhost/application')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
-const postSchema = new mongoose.Schema({                 //Schemat posta
-    content:{               //Post
+const commentSchema = new mongoose.Schema({
+    content:{
         type: String,
-        required: true,
+        required: true
+    }
+});
+
+const Comment = mongoose.model('Post', commentSchema);
+
+const postSchema = new mongoose.Schema({
+    content:{
+        type: String,
+        required: true
     },
-    commentsIDs:{            //Posty pod komentarzem
-       type: String,
-        required: true,
-    },
+    comments: [commentSchema]
 });
 
 const Post = mongoose.model('Post', postSchema);
 
-async function createPost(postData){
-    const comment = new Comment({
-
-        content: postData.content,
-        commentsIDs: postData.postID,
+async function createPost(content, comments){
+    const post = new Post({
+        content,
+        comments
     });
 
-    try {                                                   //Zapisywanie przy prawidłowym poście
-        const result = await comment.save();
+    try {
+        const result = await post.save();
         console.log(result);
-        return result;
     }
     catch (ex) {
-        console.log(ex.message);                            //Błąd przy nieprawidłowym poście
+        console.log(ex.message);
         return undefined;
     }
 };
 
+createPost('Hello World!', new Comment({ content: "Hello!"}));
+
 module.exports = createPost;
+
+
+//      DZIAŁANIA NA KOMENTARZACH!
+
+async function addComment(postId) {                         //Dodaj komentarz do posta
+    const post = await Post.findById(postId);
+    post.comments.push(comment);
+    post.save();
+};
+
+async function updateComment(postId, updatedComment) {      //Auktualizuj kometarz pod postem
+    const post = await Post.update({ _id: postId}, {
+        $set: {
+            'comment.content': updatedComment
+        }
+    });
+};
+
+async function removeComment(postId, commentId) {           //Usuń komentarz spod posta
+    const post = await Post.findById(postId);
+    const comment = await post.findById(commentId);
+    comment.remove();
+    post.save();
+};
