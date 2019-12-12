@@ -6,7 +6,7 @@ mongoose.connect('mongodb://localhost/application')
     .catch(err => console.error('Could not connect to MongoDB...'));
 
 const eventSchema = new mongoose.Schema({
-    name: {
+    name: { 
         type: String,
         required: true,
         minlength: 5,
