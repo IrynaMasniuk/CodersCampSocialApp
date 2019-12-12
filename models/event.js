@@ -59,6 +59,6 @@ function validateEvent(event) {
 
 
 
-
+exports.Event = Event;
 exports.validate = validateEvent;
 exports.create = createEvent;

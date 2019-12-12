@@ -9,10 +9,10 @@ const router = express.Router();
 // const eventManager = new EventManagerModule();
 
 
-// router.get('/', async (req, res) => {
-//     const events = await Event.find().sort('name')
-//     res.send(events);
-// });
+router.get('/', async (req, res) => {
+    const events = await Event.find()
+    res.send(events);
+});
 
 router.post('/', async (req, res) => {
     const {
