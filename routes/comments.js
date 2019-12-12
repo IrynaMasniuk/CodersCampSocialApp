@@ -2,7 +2,7 @@
 
 const express = require('express');
 const Joi = require('Joi');
-const commentManager = require('../models/comment');
+const commentManager = require('../lodels/comment');
 const router = express.Router();
 
 //router.get('/', (req, res) => {             //Pokaż wszystkie komentarze - czy potrzebne?

@@ -1,4 +1,4 @@
-const userDbUtils = require('../models/user');
+const userDbUtils = require('../lodels/user');
 
 class UserManager {
     async createUser(userData) {
