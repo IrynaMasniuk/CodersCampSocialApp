@@ -1,6 +1,7 @@
 const {
     Event,
-    validate
+    validate,
+    create
 } = require('../models/event');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -8,20 +9,18 @@ const router = express.Router();
 // const eventManager = new EventManagerModule();
 
 
-// router.get('/', async (req, res) => {
-//     const events = await Event.find().sort('name')
-//     res.send(events);
-// });
+router.get('/', async (req, res) => {
+    const events = await Event.find()
+    res.send(events);
+});
 
 router.post('/', async (req, res) => {
     const {
         error
     } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+    let event = await create(req.body)
 
-    let event = new Event({
-        name: req.body.name
-    })
     event = await event.save();
 
     res.send(event);

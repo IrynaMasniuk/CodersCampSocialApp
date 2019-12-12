@@ -27,7 +27,7 @@ const eventSchema = new mongoose.Schema({
     }
 
 });
-
+const Event = mongoose.model('Event', eventSchema);
 async function createEvent(eventData) {
     let event = new Event({
         name: eventData.name,
@@ -59,6 +59,6 @@ function validateEvent(event) {
 
 
 
-
+exports.Event = Event;
 exports.validate = validateEvent;
 exports.create = createEvent;
