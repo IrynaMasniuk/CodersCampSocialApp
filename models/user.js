@@ -50,7 +50,6 @@ mongoose.connect('mongodb://localhost/application')
                 message: 'A user should have at least one hobby :)'
             }
         },
-        listOfFriends:Array,
         //isOnline: Boolean,
     });
 
@@ -88,10 +87,7 @@ const User = mongoose.model('User', userSchema);
         return temp;
     }
 
-
-
     exports.createUser = createUser;
     exports.searchUser = searchUser;
-    exports.User = User;
 
     
