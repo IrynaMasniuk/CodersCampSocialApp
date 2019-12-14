@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+mongoose.set('useFindAndModify', false);
+
 mongoose.connect('mongodb://localhost/application')
     .then(() => console.log('Connected to MongoDB...')) //Change
     .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
@@ -19,7 +21,7 @@ const userSchema = new mongoose.Schema({
         maxlength: 24
     },
     dateOfBirth: {
-        type: String, // change to Date
+        type: String,              
         required: true
     },
     phoneNumber: {
@@ -80,16 +82,15 @@ async function insertUser(userData) {
     }
 }
 
-async function searchUser(email) {
-    const temp = await User.findOne({
-        "email": email
-    });
+async function checkIfUserExistsByEmail(email) {
+    const temp = await User.findOne({ "email": email });
     console.log('foundUser:' + JSON.stringify(temp));
     return temp;
 }
 
 async function createUser(userData) {
-    const existingUser = await searchUser(userData.email); // search(userdata);
+    const existingUser = await checkIfUserExistsByEmail(userData.email);
+  
     if (existingUser) {
         return {
             message: 'User with such e-mail is already registered',
@@ -114,19 +115,11 @@ async function createUser(userData) {
                 status: 'failed',
                 newUserId: null
             };
-        // })
     }
 }
 
 
-
-exports.createUser = createUser;
-exports.searchUser = searchUser;
-exports.User = User;
-
-}
-
 exports.User = User;
 exports.createUser = createUser;
-exports.searchUser = searchUser;
+exports.searchUser = checkIfUserExistsByEmail;
 module.exports = mongoose.model('User', userSchema);
