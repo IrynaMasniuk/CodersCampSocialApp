@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const UserManagerModule = require('../domain/usermanager');
+const User = require('../models/user');
 const express = require('express');
 const router = express.Router();
 const userManager = new UserManagerModule();
@@ -65,10 +66,19 @@ router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
    
-    const user = await userManager.createUser(req.body);
+    const user = await User.createUser(req.body);
     console.log('resp:' + user);
     res.send(user);
 });
+
+router.put('/:id', async (req, res) => {       
+    const { error } = validateUser(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+
+    const result = User.updateUser(id, req.body);
+    res.send(result);
+});
+
 let handlers = new HandlerGenerator();
 router.post('/login', handlers.login);
 //router.get('/', middleware.checkToken, handlers.index);
