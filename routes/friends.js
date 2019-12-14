@@ -26,8 +26,9 @@ if (!user) return res.status(404).send('The user with the given ID was not found
 const ind = await user.listOfFriends.indexOf(req.params.friend_id);
 if (!ind) return res.status(404).send('The friend with the given ID was not found.');
 
-const friend = await user.listOfFriends.splice(ind,1);
-res.send(friend);
+user.listOfFriends.splice(ind,1);
+
+res.send(user.listOfFriends);
 });
 
 module.exports = router;
