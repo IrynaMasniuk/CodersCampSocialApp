@@ -90,4 +90,4 @@ async function searchUser(email) {
 
 exports.createUser = createUser;
 exports.searchUser = searchUser;
-module.exports = mongoose.model('User', authorModel);
+module.exports = mongoose.model('User', userSchema);

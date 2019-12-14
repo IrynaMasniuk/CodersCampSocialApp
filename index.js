@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const logger = require('./middleware/logger');
 const comments = require('./routes/comments');
+const events = require('./routes/events');
 const friends = require('./routes/friends');
 const bodyParser = require('body-parser');
 const users = require('./routes/users');
