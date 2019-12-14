@@ -50,12 +50,12 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-    //isOnline: Boolean,
+    listOfFriends: Array,
 });
 
 const User = mongoose.model('User', userSchema);
 
-async function createUser(userData) {
+async function insertUser(userData) {
     let user = new User({
         username: userData.username,
         password: userData.password,
@@ -88,6 +88,45 @@ async function searchUser(email) {
     return temp;
 }
 
+async function createUser(userData) {
+    const existingUser = await searchUser(userData.email); // search(userdata);
+    if (existingUser) {
+        return {
+            message: 'User with such e-mail is already registered',
+            status: 'failed',
+            newUserId: null
+        }
+    } else {
+        const newUser = await insertUser(userData);
+        // newUser.then((x) => {
+        if (newUser) {
+            return {
+                message: null,
+                status: 'ok',
+                newUserId: newUser._id
+            }
+        }
+        // }).catch(x => {
+        // console.log(x);
+        else
+            return {
+                message: 'User with such e-mail is already registered',
+                status: 'failed',
+                newUserId: null
+            };
+        // })
+    }
+}
+
+
+
+exports.createUser = createUser;
+exports.searchUser = searchUser;
+exports.User = User;
+
+}
+
+exports.User = User;
 exports.createUser = createUser;
 exports.searchUser = searchUser;
 module.exports = mongoose.model('User', userSchema);

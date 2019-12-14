@@ -18,7 +18,7 @@ app.use(express.urlencoded({
 }));
 app.use(bodyParser.json());
 app.use('/api/users', users);
-app.use('/api/users/:id/friends', friends);
+app.use('/api/users/friends', friends);
 app.use('/api/events', events);
 //app.use('/?', comments);              
 

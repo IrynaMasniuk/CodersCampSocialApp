@@ -1,52 +1,35 @@
-const {Friend, createFriend, validateFriend} = require('../models/friend');
+const users = require('../models/user');
+const Joi = require('joi');
 const mongoose = require('mongoose');
 const app = require('express');
 const router = app.Router();
 
+router.post('/', async (req,res)=>{
+const user = await users.User.findById(req.params.user_id);
+if (!user) return res.status(404).send('The user with the given ID was not found.');
+
+user = await user.listOfFriends.push(req.params.friend_id);
+res.send(user.listOfFriends)
+});
 
 router.get('/', async (req,res)=>{
-    const friends = await Friend.find().sort('username');
-    res.send(friends);
+ const user = await users.User.findById(req.params._id);
+ if (!user) return res.status(404).send('The user with the given ID was not found.');
+
+ res.send(user.listOfFriends)
 });
 
-router.get('/:id', async (req,res)=>{
-    const friend = await Friend.findById(req.params.id);
-    if(!friend) return res.status(404).send('This user is not on your friends list');
-    res.send(friend);
-})
+router.delete('/', async (req,res)=>{
+const user = await users.User.findById(req.params.user_id);
+if (!user) return res.status(404).send('The user with the given ID was not found.');
 
-router.post('/',  async (req, res) => {
-    const { error } = validateFriend(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-   
-    const friend = await Friend.findById(req.params.id)
-    if(!friend) return friend = await createFriend(req.body);
-    if(friend) return res.status(404).send('This person you already have as a friend');
+const ind = await user.listOfFriends.indexOf(req.params.friend_id);
+if (!ind) return res.status(404).send('The friend with the given ID was not found.');
 
-    res.send(friend);
+user.listOfFriends.splice(ind,1);
+
+res.send(user.listOfFriends);
 });
-
-router.put('/:id', async(req,res)=>{
-    const { error } = validateFriend(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-    
-    const friend = await Friend.findByIdAndUpdate(req.params.id,{
-        typeofFriend: req.body.typeofFriend
-    },{new: true});
-
-    res.send(friend);
-});
-
-router.delete('/:id', async (req,res)=>{
-    const friend = await Friend.findByIdAndRemove(req.params.id);
-
-    if(!friend) return res.status(404).send('This user is not on your friends list');
-    
-    res.send(friend);
-});
-
-
-
-
 
 module.exports = router;
+
