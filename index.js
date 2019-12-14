@@ -12,10 +12,13 @@ const app = express();
 
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({
+    extended: true
+}));
 app.use(bodyParser.json());
 app.use('/api/users', users);
-app.use('/api/users/:id/friends',friends);
+app.use('/api/users/:id/friends', friends);
+app.use('/api/events', events);
 //app.use('/?', comments);              
 
 
