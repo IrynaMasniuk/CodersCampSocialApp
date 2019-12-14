@@ -40,9 +40,3 @@ res.send(friend);
 
 module.exports = router;
 
-
-router.get('/', async (req,res)=>{
-    const friends = await Friend.find().sort('username');
-    res.send(friends);
-});
-
