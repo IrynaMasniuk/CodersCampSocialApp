@@ -1,12 +1,14 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
+
 mongoose.connect('mongodb://localhost/application')
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...'));
 
 const eventSchema = new mongoose.Schema({
-    name: { 
+
+    name: {
         type: String,
         required: true,
         minlength: 5,
@@ -24,7 +26,12 @@ const eventSchema = new mongoose.Schema({
     },
     description: {
         type: String
-    }
+    },
+    usersId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+
+    }]
 
 });
 const Event = mongoose.model('Event', eventSchema);
@@ -33,7 +40,8 @@ async function createEvent(eventData) {
         name: eventData.name,
         date: eventData.date,
         place: eventData.place,
-        description: eventData.description
+        description: eventData.description,
+        users: eventData.users
     });
     try {
         const result = await event.save();

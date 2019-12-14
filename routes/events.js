@@ -6,7 +6,7 @@ const {
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
-// const eventManager = new EventManagerModule();
+
 
 
 router.get('/', async (req, res) => {

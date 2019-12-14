@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 mongoose.set('useFindAndModify', false);
 
 mongoose.connect('mongodb://localhost/application')
-    .then(() => console.log('Connected to MongoDB...'))                 //Change
+    .then(() => console.log('Connected to MongoDB...')) //Change
     .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
 
 const userSchema = new mongoose.Schema({
@@ -52,8 +52,8 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-        listOfFriends:Array,
-    });
+    listOfFriends: Array,
+});
 
 const User = mongoose.model('User', userSchema);
 
@@ -76,8 +76,7 @@ async function insertUser(userData) {
         const result = await user.save();
         console.log(result);
         return result;
-    }
-    catch (ex) {
+    } catch (ex) {
         console.log(ex.message);
         return undefined;
     }
@@ -91,6 +90,7 @@ async function checkIfUserExistsByEmail(email) {
 
 async function createUser(userData) {
     const existingUser = await checkIfUserExistsByEmail(userData.email);
+  
     if (existingUser) {
         return {
             message: 'User with such e-mail is already registered',
@@ -115,10 +115,11 @@ async function createUser(userData) {
                 status: 'failed',
                 newUserId: null
             };
-
     }
 }
+
 
 exports.User = User;
 exports.createUser = createUser;
 exports.searchUser = checkIfUserExistsByEmail;
+module.exports = mongoose.model('User', userSchema);
