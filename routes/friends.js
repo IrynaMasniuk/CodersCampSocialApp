@@ -1,4 +1,5 @@
 const users = require('../models/user');
+const Joi = require('joi');
 const mongoose = require('mongoose');
 const app = require('express');
 const router = app.Router();
@@ -22,21 +23,12 @@ router.delete('/', async (req,res)=>{
 const user = await users.User.findById(req.params.user_id);
 if (!user) return res.status(404).send('The user with the given ID was not found.');
 
-const friend = await user.listOfFriends.findByIdAndRemove(req.params.friend_id);
+const ind = await user.listOfFriends.indexOf(req.params.friend_id);
+if (!ind) return res.status(404).send('The friend with the given ID was not found.');
 
-//const friend = await user.listOfFriends.findById(req.body.friend_id);
-if (!friend) return res.status(404).send('The friend with the given ID was not found.');
-
-/*for( var i = 0; i < user.listOfFriends.length; i++){ 
-    if ( user.listOfFriends[i] === friend) {
-      user.listOfFriends.splice(i, 1); 
-    }
- }*/
-
+const friend = await user.listOfFriends.splice(ind,1);
 res.send(friend);
 });
-
-
 
 module.exports = router;
 
