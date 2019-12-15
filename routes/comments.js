@@ -4,6 +4,11 @@ const Comment = require('../models/comment');
 //const User = require('../models/user2.js');
 const router = express.Router();
 
+router.get('/:id', (req, res) => {          //Szukanie koemntarza w bazie danych za pomocą ID
+    const comment = Comment.find(c => c.id === parseInt(req.params.id));
+    if (!comment) return res.status(404).send('The comment with the given ID was not found.');
+    res.send(comment);
+});
 
 router.get('/:userId', (req, res) => {
     const comment = Comment.find(c => c.userId === parseInt(req.params.userId));
