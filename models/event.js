@@ -1,10 +1,8 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-
-mongoose.connect('mongodb://localhost/application')
-    .then(() => console.log('Connected to MongoDB...'))
-    .catch(err => console.error('Could not connect to MongoDB...'));
+const openDbConnection = require('../middleware/db');
+openDbConnection();
 
 const eventSchema = new mongoose.Schema({
 

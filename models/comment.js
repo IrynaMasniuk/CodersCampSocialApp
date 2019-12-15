@@ -2,9 +2,8 @@
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/application')
-    .then(() => console.log('Connected to MongoDB...'))
-    .catch(err => console.error('Could not connect to MongoDB...', err));
+const openDbConnection = require('../middleware/db');
+openDbConnection();
 
 const commentSchema = new mongoose.Schema({
     content:{

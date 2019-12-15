@@ -7,8 +7,6 @@ let config = require('../config');
 let middleware = require('../login');
 const mongoose = require('mongoose');
 
-
-
 //Sprawdzanie tokenów, tutaj chyba najbardziej pasuje
 class HandlerGenerator {
     login (req, res) {
@@ -17,7 +15,6 @@ class HandlerGenerator {
         // For the given username fetch user from DB
         let mockedUsername = username;
         let mockedPassword = 'random';
-
 
         if (username && password) {
             if (username === mockedUsername && password === mockedPassword.password) {
