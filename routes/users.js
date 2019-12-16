@@ -1,15 +1,11 @@
 const Joi = require('joi');
-const UserManagerModule = require('../domain/usermanager');
 const User = require('../models/user');
 const express = require('express');
 const router = express.Router();
-const userManager = new UserManagerModule();
 let jwt = require('jsonwebtoken');
 let config = require('../config');
 let middleware = require('../login');
 const mongoose = require('mongoose');
-
-
 
 //Sprawdzanie tokenów, tutaj chyba najbardziej pasuje
 class HandlerGenerator {
@@ -19,7 +15,6 @@ class HandlerGenerator {
         // For the given username fetch user from DB
         let mockedUsername = username;
         let mockedPassword = 'random';
-
 
         if (username && password) {
             if (username === mockedUsername && password === mockedPassword.password) {
@@ -57,11 +52,6 @@ class HandlerGenerator {
 
 // koniec tokenizatora :P
 
-
-// router.get('/', (req, res) => {
-//     res.send(users);
-// });
-
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -71,12 +61,45 @@ router.post('/', async (req, res) => {
     res.send(user);
 });
 
-router.put('/:id', async (req, res) => {       
+router.put('/:id', async (req, res) => { 
+    console.log('Validating...');
     const { error } = validateUser(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) { return res.status(400).send(error.details[0].message);}
+    console.log('Updating...')
+    const user = User.User.findByIdAndUpdate(req.params.id, req.body, (error, data) => {
+        if (error) {
+            console.log('Wrong id format, provide correct id!');
+            console.log("Error occured while updating, check error details: " + JSON.stringify(error));
+            return res.status(400).send(error.details[0].message);
+        } else {
+            if (data){
+                console.log('id found&correct, data updated');
+                return res.status(200).send('User successfully updated!');
+            } else  {
+                console.log('id not found');
+                return res.status(400).send('User not found!');
+            } 
+        }
+});
+});
 
-    const result = User.updateUser(id, req.body);
-    res.send(result);
+router.delete('/:id', async(req, res) => {
+     console.log('Started deleting process...');
+    const user = User.User.findByIdAndRemove(req.params.id, (error, data) => {
+        if (error) {
+            console.log('Wrong id format, provide correct id!');
+            console.log("Error occured while deleting, check error details: " + JSON.stringify(error));
+            return res.status(400).send(error.details[0].message);
+        } else {
+            if (data){
+                console.log('id found&correct, document deleted');
+                return res.status(200).send('User successfully deleted!');
+            } else  {
+                console.log('id not found');
+                return res.status(400).send('User not found!');
+            }
+        }
+    });
 });
 
 let handlers = new HandlerGenerator();
