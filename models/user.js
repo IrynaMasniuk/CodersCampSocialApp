@@ -48,7 +48,11 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-    listOfFriends: Array,
+    listOfFriends:[
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Friend'
+        }],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -111,6 +115,7 @@ async function createUser(userData) {
             };
     }
 }
+
 
 exports.User = User;
 exports.createUser = createUser;
