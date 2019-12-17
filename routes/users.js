@@ -52,6 +52,7 @@ class HandlerGenerator {
 
 // koniec tokenizatora :P
 
+
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -129,7 +130,8 @@ function validateUser(user) {
         cityOfOrigin: Joi.string(),
         relationStatus: Joi.string().valid('single', 'dating', 'married', 'divorced', 'complicated'),
         email: Joi.string().min(5).max(255).required(),
-        hobbies: Joi.string()
+        hobbies: Joi.string(),
+        listOfFriends: Joi.string()
     };
     return Joi.validate(user, schema);
 }

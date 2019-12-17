@@ -48,7 +48,11 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-    listOfFriends: Array,
+    listOfFriends:[
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Friend'
+        }],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -127,7 +131,6 @@ async function reset_password(email, password){
         prompt("Password doesnt match")
     }
 }
-
 
 exports.editPassword = editPassword;
 exports.reset_password = reset_password;
