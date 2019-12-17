@@ -82,11 +82,8 @@ async function insertUser(userData) {
     }
 }
 
-async function checkIfUserExistsByEmail(email) {
-    const temp = await User.findOne({ "email": email });
-    console.log('foundUser:' + JSON.stringify(temp));
-    return temp;
-}
+    exports.createUser = createUser;
+    exports.searchUser = searchUser;
 
 async function createUser(userData) {
     const existingUser = await checkIfUserExistsByEmail(userData.email);
@@ -115,8 +112,28 @@ async function createUser(userData) {
             };
     }
 }
+async function editPassword(email, new_password){
+    let user = searchUser(email);
+    if(user != null) {
+        user.password = new_password;
+        await user.save();
+    }else{
+        prompt('User witch such email doesn;t exists');
+    }
+}
+async function reset_password(email, password){
+    // ta funkcja bedzie dziala na zasadzie pytan pomocniczych, ale poki co takich nie mamy
+    let user = searchUser(email);
+    if(user.password == password){
+        user.password = 'reset';
+        await user.save();
+    }else{
+        prompt("Password doesnt match")
+    }
+}
 
-
+exports.editPassword = editPassword;
+exports.reset_password = reset_password;
 exports.User = User;
 exports.createUser = createUser;
 exports.checkIfUserExistsByEmail = checkIfUserExistsByEmail;
