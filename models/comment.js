@@ -13,7 +13,6 @@ const commentSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
     },
     createDate: {
         type: Date,
@@ -64,4 +63,4 @@ function validateComment(comment) {
 
 exports.Comment = Comment;
 exports.createComment = createComment();
-exports.validateComment - validateComment();
+exports.validateComment = validateComment();
