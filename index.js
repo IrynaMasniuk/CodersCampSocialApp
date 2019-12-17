@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use('/api/users', users);
 app.use('/api/users/friends', friends);
 app.use('/api/events', events);
-//app.use('/?', comments);              
+app.use('/api/comments', comments);              
 
 
 const port = process.env.PORT || 5000;

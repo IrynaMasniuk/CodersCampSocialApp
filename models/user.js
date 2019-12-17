@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
-
-mongoose.set('useFindAndModify', false);
-
-mongoose.connect('mongodb://localhost/application')
-    .then(() => console.log('Connected to MongoDB...')) //Change
-    .catch(err => console.log('Could not connect to MongoDB...', err)) //to debugger module
+const openDbConnection = require('../middleware/db');
+openDbConnection();
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -12,7 +8,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 3,
         maxlength: 50,
-        // match: //pattern
+
     },
     password: {
         type: String,
@@ -99,7 +95,6 @@ async function createUser(userData) {
         }
     } else {
         const newUser = await insertUser(userData);
-        // newUser.then((x) => {
         if (newUser) {
             return {
                 message: null,
@@ -107,8 +102,7 @@ async function createUser(userData) {
                 newUserId: newUser._id
             }
         }
-        // }).catch(x => {
-        // console.log(x);
+    
         else
             return {
                 message: 'User with such e-mail is already registered',
@@ -118,8 +112,7 @@ async function createUser(userData) {
     }
 }
 
-
 exports.User = User;
 exports.createUser = createUser;
-exports.searchUser = checkIfUserExistsByEmail;
-module.exports = mongoose.model('User', userSchema);
+exports.checkIfUserExistsByEmail = checkIfUserExistsByEmail;
+//module.exports = mongoose.model('User', userSchema);
