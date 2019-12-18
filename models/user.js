@@ -82,8 +82,11 @@ async function insertUser(userData) {
     }
 }
 
-    exports.createUser = createUser;
-    exports.searchUser = searchUser;
+async function checkIfUserExistsByEmail(email) {
+    const temp = await User.findOne({ "email": email });
+    console.log('foundUser:' + JSON.stringify(temp));
+    return temp;
+}
 
 async function createUser(userData) {
     const existingUser = await checkIfUserExistsByEmail(userData.email);
@@ -113,7 +116,7 @@ async function createUser(userData) {
     }
 }
 async function editPassword(email, new_password){
-    let user = searchUser(email);
+    let user = checkIfUserExistsByEmail(email);
     if(user != null) {
         user.password = new_password;
         await user.save();
@@ -123,7 +126,7 @@ async function editPassword(email, new_password){
 }
 async function reset_password(email, password){
     // ta funkcja bedzie dziala na zasadzie pytan pomocniczych, ale poki co takich nie mamy
-    let user = searchUser(email);
+    let user = checkIfUserExistsByEmail(email);
     if(user.password == password){
         user.password = 'reset';
         await user.save();
