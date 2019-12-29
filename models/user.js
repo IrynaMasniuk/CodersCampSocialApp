@@ -48,7 +48,11 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-    listOfFriends: Array,
+    listOfFriends:[
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Friend'
+        }],
 });
 
 const User = mongoose.model('User', userSchema);
@@ -111,7 +115,28 @@ async function createUser(userData) {
             };
     }
 }
+async function editPassword(email, new_password){
+    let user = checkIfUserExistsByEmail(email);
+    if(user != null) {
+        user.password = new_password;
+        await user.save();
+    }else{
+        prompt('User witch such email doesn;t exists');
+    }
+}
+async function reset_password(email, password){
+    // ta funkcja bedzie dziala na zasadzie pytan pomocniczych, ale poki co takich nie mamy
+    let user = checkIfUserExistsByEmail(email);
+    if(user.password == password){
+        user.password = 'reset';
+        await user.save();
+    }else{
+        prompt("Password doesnt match")
+    }
+}
 
+exports.editPassword = editPassword;
+exports.reset_password = reset_password;
 exports.User = User;
 exports.createUser = createUser;
 exports.checkIfUserExistsByEmail = checkIfUserExistsByEmail;

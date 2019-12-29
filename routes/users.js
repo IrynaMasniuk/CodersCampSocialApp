@@ -52,6 +52,7 @@ class HandlerGenerator {
 
 // koniec tokenizatora :P
 
+
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
@@ -104,7 +105,17 @@ router.delete('/:id', async(req, res) => {
 
 let handlers = new HandlerGenerator();
 router.post('/login', handlers.login);
-//router.get('/', middleware.checkToken, handlers.index);
+router.get('/', middleware.checkToken, handlers.index);
+router.post('/passupdate:email:password',async(req, res) =>{
+    var password = req.body.password;
+    var email = req.body.password;
+    await editPassword(email, password);
+})
+router.post('/resetpassword:email:password', async(req, res)=>{
+    var email = req.body.email;
+    var pass = req.body.password;
+    await reset_password(email, pass);
+})
 
 function validateUser(user) {
     console.log(JSON.stringify(user));
@@ -119,7 +130,8 @@ function validateUser(user) {
         cityOfOrigin: Joi.string(),
         relationStatus: Joi.string().valid('single', 'dating', 'married', 'divorced', 'complicated'),
         email: Joi.string().min(5).max(255).required(),
-        hobbies: Joi.string()
+        hobbies: Joi.string(),
+        listOfFriends: Joi.string()
     };
     return Joi.validate(user, schema);
 }
