@@ -57,7 +57,8 @@ function validateEvent(event) {
         name: Joi.string().min(5).max(100).required(),
         date: Joi.date().required(),
         place: Joi.string().min(5).max(100).required(),
-        description: Joi.string()
+        description: Joi.string(),
+        userId: Joi.string().min(24).max(24)
     };
 
     return Joi.validate(event, schema);
