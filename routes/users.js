@@ -52,6 +52,24 @@ class HandlerGenerator {
 
 // koniec tokenizatora :P
 
+router.get('/:email', async(req, res) => {
+
+    const temp = await User.User.findOne({ "email": req.params.email},     (error, data) => {
+        if (error) {
+    
+            console.log("Error occured, check error details: " + JSON.stringify(error));
+            return res.status(400).send(error.details[0].message);
+        } else {
+            if (data){
+                console.log('user found by email');
+                return res.status(200).send(data);
+            } else  {
+                console.log('id not found');
+                return res.status(400).send('User not found!');
+            } 
+        }
+    });
+})
 
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
