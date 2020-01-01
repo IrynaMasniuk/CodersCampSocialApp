@@ -21,7 +21,10 @@ router.post('/', async (req, res) => {
 });
     
 router.delete('/:id', async(req, res) => {
-   const friendship = Friend.findByIdAndRemove(req.params.id, (error, data) => {
+
+   const friend = await Friend.findOne({"_id":req.params.id});
+
+   const friendship = await Friend.findByIdAndRemove(req.params.id, (error, data) => {
        if (error) {
            console.log('Wrong id!');
            return res.status(400).send(error.details[0].message);
@@ -32,7 +35,12 @@ router.delete('/:id', async(req, res) => {
                return res.status(400).send('User not found!');
            }
        }
-   });
+    }); 
+        
+    const change = await User.User.updateOne(
+        {_id: friend.userId},
+        {$pull: {listOfFriends: friend.friendId}
+    });
 });
 
 

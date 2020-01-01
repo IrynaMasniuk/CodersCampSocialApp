@@ -35,11 +35,13 @@ async function insertFriend(Data) {
         console.log(result);
         
         const user = await User.User.findOne({"_id":result.userId});
-        const friends = await Friend.find({"userId":result.userId}).select({"friendId": 1});
+        const user_friend = await User.User.findOne({"_id":result.friendId});
+        
+         const change = await User.User.updateOne(
+            {_id: result.userId},
+            {$addToSet: {listOfFriends: [user_friend]}}
 
-        user.listOfFriends = friends;
-        user.save();
-
+);
         return result;
     } catch (ex) {
         console.log(ex.message);
@@ -48,20 +50,30 @@ async function insertFriend(Data) {
 }
 
 async function createFriend(Data) {
-    if(Data.userId == Data.friendId){
-        return {
-            message: 'It is you',
-            status: 'failed'
-        }
-    } else{
-        const newFriendship = await insertFriend(Data);
-        if (newFriendship) {
+
+    const check = await Friend.find({"userId": Data.userId, "friendId": Data.friendId});
+    console.log(check);
+
+    if (check.length == 0) {
+        if(Data.userId == Data.friendId){
             return {
-                status: 'ok',
-                friendshipId: newFriendship._id
+                message: 'It is you',
+                status: 'failed'
+             }
+        }else {
+            const newFriendship = await insertFriend(Data);
+            if (newFriendship) {
+                return {
+                    status: 'ok',
+                    friendshipId: newFriendship._id
+                }
             }
-        }
-}}
+    } 
+    }
+    else {
+        return { message: 'It is already exist'} 
+    }
+};
 
 exports.createFriend = createFriend; 
 exports.Friend = Friend;

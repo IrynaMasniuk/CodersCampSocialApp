@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema({
     listOfFriends:[
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Friend'
+        ref: 'User'
         }],
 });
 
