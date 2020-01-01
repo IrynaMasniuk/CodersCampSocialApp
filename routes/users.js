@@ -105,7 +105,17 @@ router.delete('/:id', async(req, res) => {
 
 let handlers = new HandlerGenerator();
 router.post('/login', handlers.login);
-//router.get('/', middleware.checkToken, handlers.index);
+router.get('/', middleware.checkToken, handlers.index);
+router.post('/passupdate:email:password',async(req, res) =>{
+    var password = req.body.password;
+    var email = req.body.password;
+    await editPassword(email, password);
+})
+router.post('/resetpassword:email:password', async(req, res)=>{
+    var email = req.body.email;
+    var pass = req.body.password;
+    await reset_password(email, pass);
+})
 
 function validateUser(user) {
     console.log(JSON.stringify(user));
