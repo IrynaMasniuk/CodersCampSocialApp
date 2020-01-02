@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
+const {User} = require('../models/user');
+// const Joi = require('joi');
 
-const postSchema = new mongoose.Schema({
-    content: {            // treść posta - raczej sam tekst (ewentualnie + emoji, but how to do it...?)
+const Post = mongoose.model('Post', new mongoose.Schema({
+    content: {            // treść posta
         type: String,
         required: true,
+        minlength: 1,
         maxlength: 250
     },
     userId: {             // identyfikator autora postu
         type: mongoose.Schema.Types.ObjectId,
-        ref: User
+        ref: User,
+        required: true
     },
     isPublished: {        // czy post został opublikowany
         type: Boolean,
@@ -42,34 +46,20 @@ const postSchema = new mongoose.Schema({
     },
     tags: {               // tablica tagów
         type: [String]
-    },
-    comments: [           // tablica Id komentarzy dot. danego posta
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comments'
-        }]
-});
-
-const Post = mongoose.model('Post', postSchema);
-
-async function createPost(postData) {
-    let post = new Post({
-        content: postData.content,
-        userId: postData.userId,
-        isPublished: true,
-        bgColor: postData.bgColor,
-        bgImage: postData.bgImage
-    });
-    try {
-        const result = await post.save();
-        console.log(result);
-        return result;
-    } catch (err) {
-        console.log(err.message);
-        return err.message;
     }
+}));
 
-}
+
+// function validatePost(post) {
+//     const schema = {
+//         content: Joi.string().min(1).max(255).required(),
+//         isPublished: Joi.boolean(),
+//         createDate: Joi.date().required(),
+//         lastEditDate: Joi.date().required()
+//     };
+
+//     return Joi.validate(post, schema);
+// }
 
 exports.Post = Post;
-exports.createPost = createPost;
+// exports.validatePost = validatePost;
