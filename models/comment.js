@@ -5,32 +5,31 @@ const openDbConnection = require('../middleware/db');
 openDbConnection();
 
 const commentSchema = new mongoose.Schema({
+
     content: {
         type: String,
         required: true,
+        minlength: 1,
         maxlength: 100
-    },
-    userId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
     },
     createDate: {
         type: Date,
         required: true,
-        default: Date.now,
+        default: Date.now
     },
     lastEditDate: {
         type: Date,
-        default: Date.now  ,        
-    }, 
-    likes: {
-        type: Number,
-        default: 0,
+        default: Date.now       
     },
-    post: {
+    post: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
-        },
+        }],
+    userId: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }]
+    
 });
 
 const Comment = mongoose.model('Comment', commentSchema);
@@ -38,6 +37,9 @@ const Comment = mongoose.model('Comment', commentSchema);
 async function createComment(commentData) {
     const comment = new Comment({
         content: commentData.content,
+        createDate: commentData.createDate,
+        lastEditDate: commentData.lastEditDate,
+        post: commentData.post,
         userId: commentData.userId,
     });
 
@@ -53,14 +55,16 @@ async function createComment(commentData) {
 
 function validateComment(comment) {
     const schema = {
-      userId: Joi.required(),
-      createDate: Joi.required(),
-      content: Joi.required(),
+      content: Joi.string().min(1).max(100).required(),
+      createDate: Joi.date().required(),
+      lastEditDate: Joi.date(),
+      post: Joi.string().min(24).max(24),
+      userId: Joi.string().min(24).max(24)
     };
   
     return Joi.validate(comment, schema);
 };
 
 exports.Comment = Comment;
-exports.createComment = createComment();
-exports.validateComment = validateComment();
+exports.createComment = createComment;
+exports.validateComment = validateComment;
