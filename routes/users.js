@@ -88,7 +88,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => { 
     console.log('Validating...');
-    const { error } = validateUser(req.body);
+    const { error } = validateUserProfileEdit(req.body);
     if (error) { return res.status(400).send(error.details[0].message);}
     console.log('Updating...')
     const user = User.User.findByIdAndUpdate(req.params.id, req.body, (error, data) => {
@@ -143,9 +143,20 @@ router.post('/resetpassword:email:password', async(req, res)=>{
 
 function validateUser(user) {
     console.log(JSON.stringify(user));
-    const schema = {
-        username: Joi.string().min(3).max(50).required(),
+    const schema = { ...getSchemaForProfileEdit(),
         password: Joi.string().min(6).max(24).required(),
+    };
+    return Joi.validate(user, schema);
+}
+
+function validateUserProfileEdit(user) {
+    const schema = getSchemaForProfileEdit();
+    return Joi.validate(user, schema);
+}
+
+function getSchemaForProfileEdit() {
+    return {
+        username: Joi.string().min(3).max(50).required(),
         dateOfBirth: Joi.string().required(),
         phoneNumber: Joi.string().required(),
         work: Joi.string(),
@@ -157,7 +168,6 @@ function validateUser(user) {
         hobbies: Joi.string(),
         listOfFriends: Joi.string()
     };
-    return Joi.validate(user, schema);
 }
 
 module.exports = router;
