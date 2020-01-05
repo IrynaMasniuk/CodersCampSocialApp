@@ -6,15 +6,18 @@ let jwt = require('jsonwebtoken');
 let config = require('../config');
 let middleware = require('../login');
 const mongoose = require('mongoose');
+const openDbConnection = require('../middleware/db');
+openDbConnection();
 
 //Sprawdzanie tokenów, tutaj chyba najbardziej pasuje
 class HandlerGenerator {
     login (req, res) {
+
         let username = req.body.username;
         let password = req.body.password;
         // For the given username fetch user from DB
         let mockedUsername = username;
-        let mockedPassword = 'random';
+        let mockedPassword = password;
 
         if (username && password) {
             if (username === mockedUsername && password === mockedPassword.password) {
@@ -56,39 +59,39 @@ router.get('/:email', async(req, res) => {
 
     const temp = await User.User.findOne({ "email": req.params.email},     (error, data) => {
         if (error) {
-    
+
             console.log("Error occured, check error details: " + JSON.stringify(error));
             return res.status(400).send(error.details[0].message);
         } else {
             if (data){
                 console.log('user found by email');
-                return res.status(200).header('Access-Control-Allow-Origin', '*').send(data);
+                return res.status(200).send(data);
             } else  {
                 console.log('id not found');
                 return res.status(400).send('User not found!');
-            } 
+            }
         }
     });
 })
-router.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Origin, Content-Type');
-    res.setHeader('Content-Type', 'application/json');
-    next();
-  });
+
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
-   
+
     const user = await User.createUser(req.body);
     console.log('resp:' + user);
-    res.status(200).header('Access-Control-Allow-Origin', '*').send(user);
+    res.send(user);
 });
 
-router.put('/:id', async (req, res) => { 
+router.post(`/login`, async (req, res) => {
+    const user = await User.login(req.body);
+    console.log('logowanie' + req.body.username);
+
+})
+
+router.put('/:id', async (req, res) => {
     console.log('Validating...');
-    const { error } = validateUserProfileEdit(req.body);
+    const { error } = validateUser(req.body);
     if (error) { return res.status(400).send(error.details[0].message);}
     console.log('Updating...')
     const user = User.User.findByIdAndUpdate(req.params.id, req.body, (error, data) => {
@@ -99,26 +102,7 @@ router.put('/:id', async (req, res) => {
         } else {
             if (data){
                 console.log('id found&correct, data updated');
-                return res.status(200).header('Access-Control-Allow-Origin', '*').send('User successfully updated!');
-            } else  {
-                console.log('id not found');
-                return res.status(400).send('User not found!');
-            } 
-        }
-});
-});
-
-router.delete('/:id', async(req, res) => {
-     console.log('Started deleting process...');
-    const user = User.User.findByIdAndRemove(req.params.id, (error, data) => {
-        if (error) {
-            console.log('Wrong id format, provide correct id!');
-            console.log("Error occured while deleting, check error details: " + JSON.stringify(error));
-            return res.status(400).send(error.details[0].message);
-        } else {
-            if (data){
-                console.log('id found&correct, document deleted');
-                return res.status(200).header('Access-Control-Allow-Origin', '*').send('User successfully deleted!');
+                return res.status(200).send('User successfully updated!');
             } else  {
                 console.log('id not found');
                 return res.status(400).send('User not found!');
@@ -127,36 +111,42 @@ router.delete('/:id', async(req, res) => {
     });
 });
 
-let handlers = new HandlerGenerator();
-router.post('/login', handlers.login);
-router.get('/', middleware.checkToken, handlers.index);
+router.delete('/:id', async(req, res) => {
+    console.log('Started deleting process...');
+    const user = User.User.findByIdAndRemove(req.params.id, (error, data) => {
+        if (error) {
+            console.log('Wrong id format, provide correct id!');
+            console.log("Error occured while deleting, check error details: " + JSON.stringify(error));
+            return res.status(400).send(error.details[0].message);
+        } else {
+            if (data){
+                console.log('id found&correct, document deleted');
+                return res.status(200).send('User successfully deleted!');
+            } else  {
+                console.log('id not found');
+                return res.status(400).send('User not found!');
+            }
+        }
+    });
+});
+
+//let handlers = new HandlerGenerator();
+// router.post('/login', handlers.login);
+//router.get('/', middleware.checkToken, handlers.index);
 router.post('/passupdate:email:password',async(req, res) =>{
-    var password = req.body.password;
-    var email = req.body.password;
-    await editPassword(email, password);
+    const user = await User.editPassword(req.body);
+    console.log("pass updated to : "+""+" success!");
 })
-router.post('/resetpassword:email:password', async(req, res)=>{
-    var email = req.body.email;
-    var pass = req.body.password;
-    await reset_password(email, pass);
+router.post('/resetpassword', async(req, res)=>{
+    const user = await User.reset_password(req.body);
+    console.log("resetowanie hasla");
 })
 
 function validateUser(user) {
     console.log(JSON.stringify(user));
-    const schema = { ...getSchemaForProfileEdit(),
-        password: Joi.string().min(6).max(24).required(),
-    };
-    return Joi.validate(user, schema);
-}
-
-function validateUserProfileEdit(user) {
-    const schema = getSchemaForProfileEdit();
-    return Joi.validate(user, schema);
-}
-
-function getSchemaForProfileEdit() {
-    return {
+    const schema = {
         username: Joi.string().min(3).max(50).required(),
+        password: Joi.string().min(6).max(24).required(),
         dateOfBirth: Joi.string().required(),
         phoneNumber: Joi.string().required(),
         work: Joi.string(),
@@ -168,6 +158,7 @@ function getSchemaForProfileEdit() {
         hobbies: Joi.string(),
         listOfFriends: Joi.string()
     };
+    return Joi.validate(user, schema);
 }
 
 module.exports = router;

@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
         maxlength: 24
     },
     dateOfBirth: {
-        type: String,              
+        type: String,
         required: true
     },
     phoneNumber: {
@@ -50,9 +50,14 @@ const userSchema = new mongoose.Schema({
     },
     listOfFriends:[
         {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }],
+    loggedin:{
+        required: false,
+        type : boolean(),
+        default: false
+    }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -69,7 +74,8 @@ async function insertUser(userData) {
         cityOfOrigin: userData.cityOfOrigin,
         relationStatus: userData.relationStatus,
         email: userData.email,
-        hobbies: userData.hobbies
+        hobbies: userData.hobbies,
+        loggedin: true
     });
 
     try {
@@ -90,7 +96,7 @@ async function checkIfUserExistsByEmail(email) {
 
 async function createUser(userData) {
     const existingUser = await checkIfUserExistsByEmail(userData.email);
-  
+
     if (existingUser) {
         return {
             message: 'User with such e-mail is already registered',
@@ -106,7 +112,7 @@ async function createUser(userData) {
                 newUserId: newUser._id
             }
         }
-    
+
         else
             return {
                 message: 'User with such e-mail is already registered',
@@ -115,29 +121,50 @@ async function createUser(userData) {
             };
     }
 }
-async function editPassword(email, new_password){
-    let user = checkIfUserExistsByEmail(email);
-    if(user != null) {
-        user.password = new_password;
-        await user.save();
-    }else{
-        prompt('User witch such email doesn;t exists');
+async function editPassword(data){
+    let mail = data.email;
+    let pass = data.password;
+    let new_password = data.password;
+    const temp = await User.findOne({ "email": mail });
+    let  tempPass = temp.password;
+    if(tempPass === pass){
+        temp.password = new_password;
+        console.log("pass changed");
+        await User.updateOne({email:mail}, function(err, res){
+
+        })
     }
+    else console.log('bad password');
 }
-async function reset_password(email, password){
-    // ta funkcja bedzie dziala na zasadzie pytan pomocniczych, ale poki co takich nie mamy
-    let user = checkIfUserExistsByEmail(email);
-    if(user.password == password){
-        user.password = 'reset';
-        await user.save();
-    }else{
-        prompt("Password doesnt match")
+async function reset_password(data){
+    let mail = data.email;
+    let pass = data.password;
+    let new_password = data.password;
+    const temp = await User.findOne({ "email": mail });
+    let  tempPass = temp.password;
+    if(tempPass === pass){
+        temp.password = "reset";
+        console.log("pass changed to : reset");
+        await mongoose.temp.update;
     }
+    else console.log('bad password');
+}
+async function login(data){
+    let mail = data.email;
+    let pass = data.password;
+    const temp = await User.findOne({ "email": mail });
+    let  tempPass = temp.password;
+    if(tempPass === pass){
+
+        console.log("logged in");
+    }
+    else{console.log('bad password');}
 }
 
 exports.editPassword = editPassword;
 exports.reset_password = reset_password;
 exports.User = User;
+exports.login = login;
 exports.createUser = createUser;
 exports.checkIfUserExistsByEmail = checkIfUserExistsByEmail;
 //module.exports = mongoose.model('User', userSchema);
