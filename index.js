@@ -7,7 +7,7 @@ const posts = require('./routes/posts');
 const bodyParser = require('body-parser');
 const users = require('./routes/users');
 const express = require('express');
-const events = require('./routes/events')
+// const events = require('./routes/events')
 const app = express();
 
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use(cors());
 
 app.use('/api/users', users);
 app.use('/api/friends', friends);
-app.use('/api', events);
+app.use('/api/events', events);
 app.use('/api/comments', comments);
 app.use('/api/posts', posts);
 

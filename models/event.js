@@ -39,7 +39,7 @@ async function createEvent(eventData) {
         date: eventData.date,
         place: eventData.place,
         description: eventData.description,
-        users: eventData.users
+        usersId: eventData.usersId
     });
     try {
         const result = await event.save();
@@ -58,7 +58,7 @@ function validateEvent(event) {
         date: Joi.date().required(),
         place: Joi.string().min(5).max(100).required(),
         description: Joi.string(),
-        userId: Joi.string().min(24).max(24)
+        usersId: Joi.string().min(24).max(24)
     };
 
     return Joi.validate(event, schema);
