@@ -48,14 +48,13 @@ const userSchema = new mongoose.Schema({
             message: 'A user should have at least one hobby :)'
         }
     },
-    listOfFriends:[
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }],
-    loggedin:{
+    listOfFriends: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    loggedin: {
         required: false,
-        type : Boolean,
+        type: Boolean,
         default: false
     }
 });
@@ -89,7 +88,9 @@ async function insertUser(userData) {
 }
 
 async function checkIfUserExistsByEmail(email) {
-    const temp = await User.findOne({ "email": email });
+    const temp = await User.findOne({
+        "email": email
+    });
     console.log('foundUser:' + JSON.stringify(temp));
     return temp;
 }
@@ -111,9 +112,7 @@ async function createUser(userData) {
                 status: 'ok',
                 newUserId: newUser._id
             }
-        }
-
-        else
+        } else
             return {
                 message: 'User with such e-mail is already registered',
                 status: 'failed',
@@ -121,44 +120,51 @@ async function createUser(userData) {
             };
     }
 }
-async function editPassword(data){
+async function editPassword(data) {
     let mail = data.email;
     let pass = data.password;
     let new_password = data.password;
-    const temp = await User.findOne({ "email": mail });
-    let  tempPass = temp.password;
-    if(tempPass === pass){
+    const temp = await User.findOne({
+        "email": mail
+    });
+    let tempPass = temp.password;
+    if (tempPass === pass) {
         temp.password = new_password;
         console.log("pass changed");
-        await User.updateOne({email:mail}, function(err, res){
+        await User.updateOne({
+            email: mail
+        }, function (err, res) {
 
         })
-    }
-    else console.log('bad password');
+    } else console.log('bad password');
 }
-async function reset_password(data){
+async function reset_password(data) {
     let mail = data.email;
     let pass = data.password;
     let new_password = data.password;
-    const temp = await User.findOne({ "email": mail });
-    let  tempPass = temp.password;
-    if(tempPass === pass){
+    const temp = await User.findOne({
+        "email": mail
+    });
+    let tempPass = temp.password;
+    if (tempPass === pass) {
         temp.password = "reset";
         console.log("pass changed to : reset");
         await mongoose.temp.update;
-    }
-    else console.log('bad password');
+    } else console.log('bad password');
 }
-async function login(data){
+async function login(data) {
     let mail = data.email;
     let pass = data.password;
-    const temp = await User.findOne({ "email": mail });
-    let  tempPass = temp.password;
-    if(tempPass === pass){
+    const temp = await User.findOne({
+        "email": mail
+    });
+    let tempPass = temp.password;
+    if (tempPass === pass) {
 
         console.log("logged in");
+    } else {
+        console.log('bad password');
     }
-    else{console.log('bad password');}
 }
 
 exports.editPassword = editPassword;
