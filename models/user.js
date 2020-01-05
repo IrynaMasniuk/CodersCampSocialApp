@@ -158,12 +158,17 @@ async function login(data) {
     const temp = await User.findOne({
         "email": mail
     });
-    let tempPass = temp.password;
-    if (tempPass === pass) {
+    if (temp === null) {
+        console.log("brak uzytkownika");
 
-        console.log("logged in");
     } else {
-        console.log('bad password');
+        let tempPass = temp.password;
+        if (tempPass === pass) {
+
+            console.log("logged in");
+        } else {
+            console.log('bad password');
+        }
     }
 }
 

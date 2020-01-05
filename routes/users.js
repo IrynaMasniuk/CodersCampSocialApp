@@ -85,7 +85,8 @@ router.post('/', async (req, res) => {
 
 router.post(`/login`, async (req, res) => {
     const user = await User.login(req.body);
-    console.log('logowanie' + req.body.username);
+    console.log('logowanie' + req.body.email);
+    res.send(user);
 
 })
 
