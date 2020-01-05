@@ -62,7 +62,7 @@ router.get('/:email', async(req, res) => {
         } else {
             if (data){
                 console.log('user found by email');
-                return res.status(200).send(data);
+                return res.status(200).header('Access-Control-Allow-Origin', '*').send(data);
             } else  {
                 console.log('id not found');
                 return res.status(400).send('User not found!');
@@ -70,14 +70,20 @@ router.get('/:email', async(req, res) => {
         }
     });
 })
-
+router.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Origin, Content-Type');
+    res.setHeader('Content-Type', 'application/json');
+    next();
+  });
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
    
     const user = await User.createUser(req.body);
     console.log('resp:' + user);
-    res.send(user);
+    res.status(200).header('Access-Control-Allow-Origin', '*').send(user);
 });
 
 router.put('/:id', async (req, res) => { 
@@ -93,7 +99,7 @@ router.put('/:id', async (req, res) => {
         } else {
             if (data){
                 console.log('id found&correct, data updated');
-                return res.status(200).send('User successfully updated!');
+                return res.status(200).header('Access-Control-Allow-Origin', '*').send('User successfully updated!');
             } else  {
                 console.log('id not found');
                 return res.status(400).send('User not found!');
@@ -112,7 +118,7 @@ router.delete('/:id', async(req, res) => {
         } else {
             if (data){
                 console.log('id found&correct, document deleted');
-                return res.status(200).send('User successfully deleted!');
+                return res.status(200).header('Access-Control-Allow-Origin', '*').send('User successfully deleted!');
             } else  {
                 console.log('id not found');
                 return res.status(400).send('User not found!');
