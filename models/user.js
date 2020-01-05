@@ -55,7 +55,7 @@ const userSchema = new mongoose.Schema({
         }],
     loggedin:{
         required: false,
-        type : boolean(),
+        type : Boolean,
         default: false
     }
 });
